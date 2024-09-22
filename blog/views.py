@@ -13,8 +13,9 @@ def home(request):
     return render(request, 'blog/home.html', context)
 
 def blog_detail(request,id):
+    categories = Category.objects.all()
     post = Post.objects.get(id=id)
-    return render(request, 'blog/blog_detail.html', {'post':post})
+    return render(request, 'blog/blog_detail.html', {'post':post, 'categories':categories})
 
 @login_required
 def write_blog(request):
