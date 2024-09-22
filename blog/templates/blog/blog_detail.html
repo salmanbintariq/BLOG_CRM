@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }} - Blog CRM{% endblock %}
+
+{% block content %}
+<article class="bg-white rounded-lg shadow-md overflow-hidden">
+    <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full h-64 object-cover">
+    <div class="p-6">
+        <h1 class="text-3xl font-bold mb-4">{{ post.title }}</h1>
+        <p class="text-gray-600 mb-4">Published on {{ post.created_at }} by @{{ post.author }}</p>
+        <div class="prose max-w-none">
+            {{ post.content|safe }}
+        </div>
+    </div>
+</article>
+{% endblock %}

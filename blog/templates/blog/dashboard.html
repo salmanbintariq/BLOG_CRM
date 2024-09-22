@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Blog CRM{% endblock %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-6">Dashboard</h1>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-semibold mb-4">Recent Posts</h2>
+        <ul class="space-y-2">
+            {% for post in recent_posts %}
+            <li>
+                <a href="#" class="text-green-500 hover:text-green-600">{{ post.title }}</a>
+                <span class="text-gray-500 text-sm">{{ post.date }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-semibold mb-4">Quick Stats</h2>
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <p class="text-gray-600">Total Posts</p>
+                <p class="text-3xl font-bold">{{ total_posts }}</p>
+            </div>
+            <div>
+                <p class="text-gray-600">Total Comments</p>
+                <p class="text-3xl font-bold">{{ total_comments }}</p>
+            </div>
+            <div>
+                <p class="text-gray-600">Total Users</p>
+                <p class="text-3xl font-bold">{{ total_users }}</p>
+            </div>
+            <div>
+                <p class="text-gray-600">New Users (This Month)</p>
+                <p class="text-3xl font-bold">{{ new_users_this_month }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

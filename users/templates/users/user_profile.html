@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}{{ user.username }}'s Profile - Blog CRM{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-lg shadow-md p-6">
+    <h1 class="text-3xl font-bold mb-6">{{ user.username }}'s Profile</h1>
+    <div class="mb-4">
+        <strong class="text-gray-700">Email:</strong> {{ user.email }}
+    </div>
+    <div class="mb-4">
+        <strong class="text-gray-700">Date Joined:</strong> {{ user.date_joined }}
+    </div>
+    <div class="mb-6">
+        <strong class="text-gray-700">Number of Posts:</strong> {{ user.posts.count }}
+    </div>
+    <a href="#" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+        Edit Profile
+    </a>
+</div>
+{% endblock %}
