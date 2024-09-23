@@ -1,170 +1,269 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}Blog CRM{% endblock %}</title>
     <!-- Tailwind CSS for styling -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
     <style>
-        html,
-        body {
-            height: 100%;
-        }
+      html,
+      body {
+        height: 100%;
+      }
 
-        /* Highlight the active link */
-        .active-link {
-            color: #f97316;
-            font-weight: bold;
-        }
+      /* Highlight the active link */
+      .active-link {
+        color: #f97316;
+        font-weight: bold;
+      }
 
-        /* Center search bar */
-        .search-bar {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+      /* Center search bar */
+      .search-bar {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
 
-        /* Icon for Write Your Blog */
-        .write-blog-icon {
-            display: flex;
-            align-items: center;
-        }
+      /* Icon for Write Your Blog */
+      .write-blog-icon {
+        display: flex;
+        align-items: center;
+      }
 
-        /* Dropdown visibility on hover */
-        .dropdown:hover .dropdown-menu {
-            display: block;
-        }
+      /* Dropdown visibility on hover */
+      .dropdown:hover .dropdown-menu {
+        display: block;
+      }
 
-        .dropdown-menu {
-            display: none; /* Initially hidden */
-            position: absolute;
-            left: 0;
-            margin-top: 1;
-            width: 12rem;
-            border-radius: 0.375rem; /* Rounded corners */
-            background-color: white; /* Background color */
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Shadow */
-            z-index: 10; /* Ensure it appears above other elements */
-        }
+      .dropdown-menu {
+        display: none; /* Initially hidden */
+        position: absolute;
+        left: 0;
+        margin-top: 1;
+        width: 12rem;
+        border-radius: 0.375rem; /* Rounded corners */
+        background-color: white; /* Background color */
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Shadow */
+        z-index: 10; /* Ensure it appears above other elements */
+      }
     </style>
-</head>
+  </head>
 
-<body class="bg-white text-gray-800 flex flex-col min-h-screen">
+  <body class="bg-white text-gray-800 flex flex-col min-h-screen">
     <!-- Light Themed Navbar -->
     <nav class="bg-gray-100 shadow-lg sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex justify-between items-center py-4">
-                <!-- Logo -->
-                <div class="flex items-center space-x-4">
-                    <a href="{% url 'home' %}" class="flex items-center text-gray-800">
-                        <svg class="w-8 h-8 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                            <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
-                        </svg>
-                        <span class="font-bold text-2xl">MyBlog</span>
-                    </a>
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="flex justify-between items-center py-4">
+          <!-- Logo -->
+          <div class="flex items-center space-x-4">
+            <a href="{% url 'home' %}" class="flex items-center text-gray-800">
+              <svg
+                class="w-8 h-8 mr-2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
+              </svg>
+              <span class="font-bold text-2xl">MyBlog</span>
+            </a>
+          </div>
+
+          <!-- Navigation Links -->
+          <div class="hidden md:flex items-center space-x-6 ml-8">
+            <a
+              href="{% url 'home' %}"
+              class="text-gray-600 hover:text-gray-800 transition duration-300 {% if request.resolver_match.url_name == 'home' %}active-link{% endif %}"
+              >Home</a
+            >
+
+            <!-- Categories Dropdown -->
+            <div class="relative dropdown">
+              <button
+                class="text-gray-600 hover:text-gray-800 transition duration-300 focus:outline-none"
+              >
+                Categories
+              </button>
+              <!-- Dropdown menu -->
+              <div class="dropdown-menu">
+                <div class="py-1">
+                    <a
+                    href="{% url 'category_blogs' 'artificial-intelligence' %}"
+                    class="block px-4 py-2 text-gray-600 hover:bg-gray-200 hover:text-gray-800"
+                    >Artificial Intelligence</a
+                    >
+                  <a
+                    href="{% url 'category_blogs' 'cloud-computing' %}"
+                    class="block px-4 py-2 text-gray-600 hover:bg-gray-200 hover:text-gray-800"
+                    >Cloud Computing</a
+                  >
+                  <a
+                    href="{% url 'category_blogs' 'cybersecurity' %}"
+                    class="block px-4 py-2 text-gray-600 hover:bg-gray-200 hover:text-gray-800"
+                    >Cybersecurity</a
+                  >
+                  <a
+                    href="{% url 'category_blogs' 'data-science' %}"
+                    class="block px-4 py-2 text-gray-600 hover:bg-gray-200 hover:text-gray-800"
+                    >Data Science</a
+                  >
+                  <a
+                    href="{% url 'category_blogs' 'devops' %}"
+                    class="block px-4 py-2 text-gray-600 hover:bg-gray-200 hover:text-gray-800"
+                    >DevOps</a
+                  >
+                  
+                  <a
+                    href="{% url 'category_blogs' 'software-development' %}"
+                    class="block px-4 py-2 text-gray-600 hover:bg-gray-200 hover:text-gray-800"
+                    >Software Development</a
+                  >
                 </div>
-
-                <!-- Navigation Links -->
-                <div class="hidden md:flex items-center space-x-6 ml-8">
-                    <a href="{% url 'home' %}" class="text-gray-600 hover:text-gray-800 transition duration-300 {% if request.resolver_match.url_name == 'home' %}active-link{% endif %}">Home</a>
-
-                    <!-- Categories Dropdown -->
-                    <div class="relative dropdown">
-                        <button class="text-gray-600 hover:text-gray-800 transition duration-300 focus:outline-none">
-                            Categories
-                        </button>
-                        <!-- Dropdown menu -->
-                        <div class="dropdown-menu">
-                            <div class="py-1">
-                                <a href="#" class="block px-4 py-2 text-gray-600 hover:bg-gray-200 hover:text-gray-800">Cloud</a>
-                                <a href="#" class="block px-4 py-2 text-gray-600 hover:bg-gray-200 hover:text-gray-800">Cybersecurity</a>
-                                <a href="#" class="block px-4 py-2 text-gray-600 hover:bg-gray-200 hover:text-gray-800">AI & Data</a>
-                                <a href="#" class="block px-4 py-2 text-gray-600 hover:bg-gray-200 hover:text-gray-800">Software Development</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Centered Search Bar -->
-                <div class="search-bar w-full max-w-md mx-auto relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-2">
-                        <svg class="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M21 21l-4.35-4.35"></path>
-                            <circle cx="11" cy="11" r="6"></circle>
-                        </svg>
-                    </span>
-                    <input class="pl-8 w-full bg-gray-200 text-gray-700 rounded-full py-2 px-4 focus:outline-none" type="text" placeholder="Search..." />
-                </div>
-
-                <!-- Write Your Blog & Login/Sign Up -->
-                <div class="hidden md:flex items-center space-x-4">
-                    <!-- Write Your Blog Button -->
-                    <a href="{% url 'write_blog' %}" class="py-2 px-4 bg-blue-500 text-white rounded-full hover:bg-blue-400 transition duration-300 flex items-center">
-                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2v20M2 12h20"></path>
-                        </svg>
-                        Write Your Blog
-                    </a>
-
-                    {% if user.is_authenticated %}
-                    <!-- Logout Button -->
-                    <a href="{% url 'logout' %}" class="py-2 px-4 bg-red-500 text-white rounded-full hover:bg-red-400 transition duration-300">Log Out</a>
-                    {% else %}
-                    <!-- Login and Sign Up -->
-                    <a href="{% url 'login' %}" class="py-2 px-4 bg-gray-300 text-gray-700 rounded-full hover:bg-gray-200 transition duration-300">Log In</a>
-                    <a href="{% url 'register' %}" class="py-2 px-4 bg-green-500 text-white rounded-full hover:bg-green-400 transition duration-300">Sign Up</a>
-                    {% endif %}
-                </div>
+              </div>
             </div>
+          </div>
+
+          <!-- Centered Search Bar -->
+          <form action="{% url 'home' %}" method="get" class="flex-grow flex justify-center mx-4">
+            <div class="search-bar w-full max-w-md mx-auto relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-2">
+                <svg
+                  class="h-5 w-5 text-gray-500"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M21 21l-4.35-4.35"></path>
+                  <circle cx="11" cy="11" r="6"></circle>
+                </svg>
+              </span>
+              <input
+                class="pl-8 w-full bg-gray-200 text-gray-700 rounded-full py-2 px-4 focus:outline-none"
+                name="q"
+                type="text"
+                placeholder="Search..."
+              />
+            </div>
+          </form>
+
+          <!-- Write Your Blog & Login/Sign Up -->
+          <div class="hidden md:flex items-center space-x-4">
+            <!-- Write Your Blog Button -->
+            <a
+              href="{% url 'write_blog' %}"
+              class="py-2 px-4 bg-blue-500 text-white rounded-full hover:bg-blue-400 transition duration-300 flex items-center"
+            >
+              <svg
+                class="w-5 h-5 mr-1"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M12 2v20M2 12h20"></path>
+              </svg>
+              Write Your Blog
+            </a>
+
+            {% if user.is_authenticated %}
+            <!-- Logout Button -->
+            <a
+              href="{% url 'logout' %}"
+              class="py-2 px-4 bg-red-500 text-white rounded-full hover:bg-red-400 transition duration-300"
+              >Log Out</a
+            >
+            {% else %}
+            <!-- Login and Sign Up -->
+            <a
+              href="{% url 'login' %}"
+              class="py-2 px-4 bg-gray-300 text-gray-700 rounded-full hover:bg-gray-200 transition duration-300"
+              >Log In</a
+            >
+            <a
+              href="{% url 'register' %}"
+              class="py-2 px-4 bg-green-500 text-white rounded-full hover:bg-green-400 transition duration-300"
+              >Sign Up</a
+            >
+            {% endif %}
+          </div>
         </div>
+      </div>
     </nav>
 
     <!-- Main Content -->
     <div class="container mx-auto mt-12 px-6 flex-grow">
-        {% block content %} {% endblock %}
+      {% block content %} {% endblock %}
     </div>
 
     <!-- Footer -->
     <footer class="bg-gray-100 text-gray-800 py-4 mt-4">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex justify-between">
-                <!-- Footer Branding -->
-                <div>
-                    <h2 class="text-2xl font-bold">MyBlog</h2>
-                    <p class="mt-4 text-gray-500">Your daily source of awesome articles, insights, and blogs.</p>
-                </div>
-                <!-- Quick Links -->
-                <div>
-                    <h3 class="font-semibold text-lg mb-4">Quick Links</h3>
-                    <ul>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-gray-800 transition duration-300">Home</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-gray-800 transition duration-300">About Us</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-gray-800 transition duration-300">Contact Us</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-gray-800 transition duration-300">Privacy Policy</a>
-                        </li>
-                    </ul>
-                </div>
-                <!-- Contact Information -->
-                <div>
-                    <h3 class="font-semibold text-lg mb-4">Contact Us</h3>
-                    <p class="text-gray-600">Email: info@myblog.com</p>
-                    <p class="text-gray-600">Phone: +123 456 7890</p>
-                    <p class="text-gray-600">Location: 123 Blog Street, City</p>
-                </div>
-            </div>
-            <div class="text-center text-gray-500 mt-8">
-                © 2024 MyBlog. All Rights Reserved.
-            </div>
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="flex justify-between">
+          <!-- Footer Branding -->
+          <div>
+            <h2 class="text-2xl font-bold">MyBlog</h2>
+            <p class="mt-4 text-gray-500">
+              Your daily source of awesome articles, insights, and blogs.
+            </p>
+          </div>
+          <!-- Quick Links -->
+          <div>
+            <h3 class="font-semibold text-lg mb-4">Quick Links</h3>
+            <ul>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-600 hover:text-gray-800 transition duration-300"
+                  >Home</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-600 hover:text-gray-800 transition duration-300"
+                  >About Us</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-600 hover:text-gray-800 transition duration-300"
+                  >Contact Us</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-600 hover:text-gray-800 transition duration-300"
+                  >Privacy Policy</a
+                >
+              </li>
+            </ul>
+          </div>
+          <!-- Contact Information -->
+          <div>
+            <h3 class="font-semibold text-lg mb-4">Contact Us</h3>
+            <p class="text-gray-600">Email: info@myblog.com</p>
+            <p class="text-gray-600">Phone: +123 456 7890</p>
+            <p class="text-gray-600">Location: 123 Blog Street, City</p>
+          </div>
         </div>
+        <div class="text-center text-gray-500 mt-8">
+          © 2024 MyBlog. All Rights Reserved.
+        </div>
+      </div>
     </footer>
-</body>
+  </body>
 </html>

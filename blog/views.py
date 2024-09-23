@@ -1,12 +1,23 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from .models import Post,Category
 from .forms import PostForm
+
 
 # Create your views here.
 
 def home(request):
-    posts = Post.objects.order_by('-created_at')[:6]
+    query = request.GET.get('q', '')
+    if query:
+        posts = Post.objects.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(author__username__icontains=query)
+        ).order_by('-created_at')
+    else:
+        posts = Post.objects.order_by('-created_at')    
+
     context = {
         'posts': posts,
     }
@@ -29,4 +40,9 @@ def write_blog(request):
             return redirect('home')
     else:
         form = PostForm()
-    return render(request, 'blog/write_blog.html', {'form':form, 'categories':categories})         
+    return render(request, 'blog/write_blog.html', {'form':form, 'categories':categories})     
+
+def category_blogs(request, slug):
+    category = get_object_or_404(Category, slug=slug)
+    posts = Post.objects.filter(categories=category)    
+    return render(request, 'blog/category_blogs.html', {'category':category, "posts":posts})
