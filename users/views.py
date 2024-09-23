@@ -1,7 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+
 
 def register(request):
     if request.method == 'POST':
@@ -25,7 +27,7 @@ def register(request):
         user = User.objects.create_user(username=username, email=email, password=password)
         user.save()
         messages.success(request, "Registration successful! You can now log in.", extra_tags='success')
-        return redirect('register')
+        return redirect('login')
     
     return render(request, 'users/register.html')
 
@@ -47,3 +49,4 @@ def login_user(request):
 def logout_user(request):
     logout(request)
     return redirect('home')
+
