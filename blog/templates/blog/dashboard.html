@@ -1,41 +1,68 @@
+<!-- In your dashboard template -->
 {% extends "base.html" %}
 
-{% block title %}Dashboard - Blog CRM{% endblock %}
+{% block title %}Dashboard | Blog-CRM{% endblock %}
 
 {% block content %}
-<h1 class="text-3xl font-bold mb-6">Dashboard</h1>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-xl font-semibold mb-4">Recent Posts</h2>
-        <ul class="space-y-2">
-            {% for post in recent_posts %}
-            <li>
-                <a href="#" class="text-green-500 hover:text-green-600">{{ post.title }}</a>
-                <span class="text-gray-500 text-sm">{{ post.date }}</span>
-            </li>
-            {% endfor %}
-        </ul>
+
+<div class="container mx-auto px-4">
+    {% if messages %}
+    <div class="p-4 text-sm rounded-lg">
+      {% for message in messages %}
+      <div class="bg-green-200 border border-green-400 text-green-700 rounded-lg p-2">
+        {{ message }}
+      </div>
+      {% endfor %}
     </div>
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-xl font-semibold mb-4">Quick Stats</h2>
-        <div class="grid grid-cols-2 gap-4">
-            <div>
-                <p class="text-gray-600">Total Posts</p>
-                <p class="text-3xl font-bold">{{ total_posts }}</p>
-            </div>
-            <div>
-                <p class="text-gray-600">Total Comments</p>
-                <p class="text-3xl font-bold">{{ total_comments }}</p>
-            </div>
-            <div>
-                <p class="text-gray-600">Total Users</p>
-                <p class="text-3xl font-bold">{{ total_users }}</p>
-            </div>
-            <div>
-                <p class="text-gray-600">New Users (This Month)</p>
-                <p class="text-3xl font-bold">{{ new_users_this_month }}</p>
-            </div>
+    {% endif %}
+</div>   
+
+<div class="container mx-auto mt-12 px-6 flex-grow">
+    <h1 class="text-3xl font-bold mb-6">Dashboard</h1>
+
+    <!-- Welcome Message -->
+    {% if user.is_authenticated %}
+    <div class="mb-6 p-4 bg-blue-100 text-blue-800 rounded-lg">
+        <h2 class="text-xl font-semibold">Hello, {{ user.username|capfirst }}!</h2>
+        <p>Welcome to your dashboard. Here you can manage your articles and view your statistics.</p>
+    </div>
+    {% endif %}
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white shadow-md rounded-lg p-6 card">
+            <h2 class="text-xl font-semibold">Total Articles</h2>
+            <p class="text-3xl font-bold mt-2">{{ post_count }}</p>
+            <p class="text-gray-500">Total number of articles you have posted.</p>
         </div>
+    </div>
+
+    <h2 class="text-2xl font-semibold mb-4">Your Articles</h2>
+    <div class="bg-white shadow-md rounded-lg p-6">
+        {% if post_count > 0 %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for post in posts %}
+            <a href="{% url 'blog-detail' slug=post.slug %}" class="bg-white p-4 rounded-lg shadow">
+                {% if post.image %}
+                    <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full h-48 object-cover mb-4 rounded-md">
+                {% endif %}
+                <h2 class="text-xl font-semibold">{{ post.title }}</h2>
+                <br>
+                <p class="text-black-600 text-lg">
+                    by <span class="font-semibold">{{ post.author.username|capfirst }}</span>
+                    <br>
+                    <span class="text-gray-500">{{ post.created_at|date:"M d, Y" }}</span>
+                    <br> 
+                </p>
+                <p class="text-gray-600">{{ post.content|truncatewords:20 }}</p>
+                <span class="text-pink-500 hover:underline">Read more...</span>
+            </a>
+            {% empty %}
+                <p>No articles found.</p>
+            {% endfor %}
+        </div>
+        {% else %}
+            <p class="text-gray-500">You have not posted any articles yet.</p>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

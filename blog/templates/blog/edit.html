@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Write a Blog Post{% endblock %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-6">Edit your Blog Post</h1>
+<form method="post" enctype="multipart/form-data" class="bg-white rounded-lg shadow-md p-6">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    
+    <div class="mb-4">
+        <label for="{{ form.title.id_for_label }}" class="block text-gray-700 font-bold mb-2">{{ form.title.label }}</label>
+        {{ form.title }}
+        {{ form.title.errors }}
+    </div>
+    
+    <div class="mb-4">
+        <label for="{{ form.content.id_for_label }}" class="block text-gray-700 font-bold mb-2">{{ form.content.label }}</label>
+        {{ form.content }}
+        {{ form.content.errors }}
+    </div>
+    
+    <div class="mb-4">
+        <label for="{{ form.categories.id_for_label }}" class="block text-gray-700 font-bold mb-2">{{ form.categories.label }}</label>
+        {{ form.categories }}  {# This will now render a dropdown #}
+        {{ form.categories.errors }}
+    </div>
+    
+    <div class="mb-4">
+        <label for="{{ form.image.id_for_label }}" class="block text-gray-700 font-bold mb-2">{{ form.image.label }}</label>
+        {{ form.image }}
+        {{ form.image.errors }}
+    </div>
+    
+    <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+        Submit Post
+    </button>
+</form>
+{% endblock %}

@@ -3,7 +3,8 @@ from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-
+from django.contrib.auth import password_validation
+from django.core.exceptions import ValidationError
 
 def register(request):
     if request.method == 'POST':
@@ -12,9 +13,15 @@ def register(request):
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
 
-        if password != confirm_password:
-            messages.error(request, "Passwords do not match.", extra_tags='error')
-            return redirect('register')
+        # if password != confirm_password:
+        #     messages.error(request, "Passwords do not match.", extra_tags='error')
+        #     return redirect('register')
+        try:
+            password_validation.validate_password(password=password)
+        except ValidationError as e:
+            for error in e:
+                messages.error(request, error, extra_tags='error')    
+            return redirect('register')    
 
         if User.objects.filter(username=username).exists():
             messages.error(request, "Username already exists.", extra_tags='error')
@@ -27,7 +34,7 @@ def register(request):
         user = User.objects.create_user(username=username, email=email, password=password)
         user.save()
         messages.success(request, "Registration successful! You can now log in.", extra_tags='success')
-        return redirect('login')
+        return redirect('register')
     
     return render(request, 'users/register.html')
 

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -77,8 +78,12 @@ WSGI_APPLICATION = 'a_blog_crm.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DATABASE_NAME'),       # Name of your database
+        'USER': config('DATABASE_USER'),       # Database user
+        'PASSWORD': config('DATABASE_PASSWORD'), # Database password
+        'HOST': config('DATABASE_HOST', default='localhost'),  # Default is localhost
+        'PORT': config('DATABASE_PORT', default='5432'),       # Default PostgreSQL port
     }
 }
 
@@ -122,7 +127,7 @@ STATIC_URL = 'static/'
 # To collect static files into one directory (for production)
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
