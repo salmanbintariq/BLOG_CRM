@@ -1,41 +1,59 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Blog CRM</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
 
-{% block title %}Login - Blog CRM{% endblock %}
+<div class="flex justify-center items-center min-h-screen">
+    <div class="max-w-sm w-full bg-white shadow-lg rounded-lg p-8">
+        <h1 class="text-4xl font-semibold mb-6  text-gray-800">Login</h1>
 
-{% block content %}
-<div class="max-w-sm mx-auto bg-white rounded-lg shadow-md p-6">
-    <h1 class="text-3xl font-bold mb-6">Login</h1>
-
-    {% if messages %}
-    <div class="mb-4">
-        {% for message in messages %}
-            <div class="p-4 mb-2 rounded-lg 
-                {% if message.tags == 'error' %}bg-red-100 border border-red-400 text-red-700{% endif %}
-                {% if message.tags == 'success' %}bg-green-100 border border-green-400 text-green-700{% endif %}
-            ">
-                {{ message }}
+        {% if messages %}
+        <div class="mb-4">
+            {% for message in messages %}
+                <div class="p-4 mb-2 rounded-lg 
+                    {% if message.tags == 'error' %}bg-red-100 border border-red-400 text-red-700{% endif %}
+                    {% if message.tags == 'success' %}bg-green-100 border border-green-400 text-green-700{% endif %}
+                ">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label for="username" class="block text-gray-700 font-medium mb-2">Username</label>
+                <input type="text" id="username" name="username" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" required>
             </div>
-        {% endfor %}
-    </div>
-    {% endif %}
-    
-    <form method="post">
-        {% csrf_token %}
-        <div class="mb-4">
-            <label for="username" class="block text-gray-700 font-bold mb-2">Username</label>
-            <input type="text" id="username" name="username" class="w-full px-3 py-2 border rounded-lg" required>
-        </div>
-        <div class="mb-4">
-            <label for="password" class="block text-gray-700 font-bold mb-2">Password</label>
-            <input type="password" id="password" name="password" class="w-full px-3 py-2 border rounded-lg" required>
-        </div>
-        <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
-            Login
-        </button>
-    </form>
+            <div class="mb-6">
+                <label for="password" class="block text-gray-700 font-medium mb-2">Password</label>
+                <input type="password" id="password" name="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" required>
+            </div>
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
+                Login
+            </button>
+        </form>
 
-    <div class="mt-4 text-gray-600">
-        <p>Don't have an account? <a href="{% url 'register' %}" class="text-green-500 hover:underline">Register here</a>.</p>
+        <div class="mt-6 text-center">
+            <p class="text-gray-600">Don't have an account? 
+                <a href="{% url 'register' %}" class="text-blue-500 font-semibold hover:underline">Sign in</a>.
+            </p>
+        </div>
     </div>
 </div>
-{% endblock %}
+
+<footer class="bg-gray-800 text-white py-2 text-center mt-10">
+    <p>MyBlog &copy; 2024</p>
+    <a href="#" class="hover:text-white">Privacy Policy</a> | 
+    <a href="#" class="hover:text-white">About Us</a> | 
+    <a href="#" class="hover:text-white">Contact Us</a>
+</footer>
+
+</body>
+</html>

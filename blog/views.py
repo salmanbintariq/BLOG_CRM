@@ -3,8 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.contrib import messages
-from .models import Post,Category
-from .forms import PostForm
+from .models import Post,Category,Comment
+from .forms import PostForm, CommentForm
 
 
 # Create your views here.
@@ -30,11 +30,35 @@ def dashboard(request):
     posts = Post.objects.filter(author=request.user)
     return render(request, 'blog/dashboard.html', {"posts":posts, "user":request.user, "post_count": posts.count()})
 
-
+@login_required
 def blog_detail(request,slug):
     categories = Category.objects.all()
     post = get_object_or_404(Post, slug=slug)
-    return render(request, 'blog/blog_detail.html', {'post':post, 'categories':categories})
+    comments = post.comments.filter(parent=None) # Get only top-level comments
+
+    # Comment form handling
+    if request.method == 'POST':
+        parent_id = request.POST.get('parent_id')
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False)
+            comment.post = post
+            comment.author = request.user
+            if parent_id:
+                comment.parent_id = parent_id
+            comment.save()
+            return redirect('blog-detail', slug=post.slug)
+    else:
+        comment_form = CommentForm()
+
+    context = {
+        'post':post,
+        'categories':categories,
+        'comments':comments,
+        'comment_form':comment_form
+    }        
+
+    return render(request, 'blog/blog_detail.html', context)
 
 @login_required
 def write_blog(request):
@@ -76,3 +100,29 @@ def delete_blog(request, slug):
         post.delete()
         messages.success(request, 'Post deleted successfully!')
         return redirect('dashboard')
+    
+@login_required    
+def edit_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Comment updated!")
+            return redirect('blog-detail', slug=comment.post.slug)
+        else:
+            messages.error(request, "Failed to update comment. Please check your input.")
+    
+    return redirect('blog-detail', slug=comment.post.slug)
+
+
+@login_required
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+
+    if request.method == 'POST':
+        comment.delete()
+        messages.success(request, "Comment deleted!")
+        
+    return redirect('blog-detail', slug=comment.post.slug)

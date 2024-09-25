@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post, Category
+from .models import Post, Category, Comment
 
 class PostForm(forms.ModelForm):
     # Define the categories field with a ModelChoiceField and Tailwind styling
@@ -35,3 +35,12 @@ class PostForm(forms.ModelForm):
         self.fields['image'].widget.attrs.update({
             'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg',
         })
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']  # Only the 1 field: content
+        widgets = {
+            'content':forms.Textarea(attrs={'rows': 3, 'placeholder': 'Write your comment here...'}),
+        }

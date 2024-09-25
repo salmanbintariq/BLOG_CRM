@@ -13,7 +13,7 @@
     <!-- Blog Posts Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {% for post in posts %}
-        <a href="{% url 'blog-detail' post.id %}" class="bg-white p-4 rounded-lg shadow">
+        <a href="{% url 'blog-detail' post.slug %}" class="bg-white p-4 rounded-lg shadow">
             {% if post.image %}
                 <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full h-48 object-cover mb-4 rounded-md">
             {% endif %}
